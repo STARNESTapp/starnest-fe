@@ -1,6 +1,13 @@
 import { HeroSearchBar } from "@/components/hero-search-bar";
+import type { Category } from "@/types/chat";
 
-export function HeroSection() {
+interface HeroSectionProps {
+  category: Category;
+  onCategoryChange: (category: Category) => void;
+  onSearch: (query: string) => void;
+}
+
+export function HeroSection({ category, onCategoryChange, onSearch }: HeroSectionProps) {
   return (
     <section className="relative flex flex-1 flex-col overflow-hidden bg-[#0b0b0b] px-2 pb-2 pt-24 sm:px-3 sm:pb-3">
       <div className="relative flex flex-1 flex-col overflow-hidden rounded-[32px] border-2 border-[#f73145]/20 shadow-[0_0_56px_0_rgba(247,49,69,0.32)] sm:rounded-[56px]">
@@ -42,7 +49,11 @@ export function HeroSection() {
             </p>
           </div>
           <div className="w-full max-w-[840px]">
-            <HeroSearchBar />
+            <HeroSearchBar
+              category={category}
+              onCategoryChange={onCategoryChange}
+              onSearch={onSearch}
+            />
           </div>
         </div>
       </div>
