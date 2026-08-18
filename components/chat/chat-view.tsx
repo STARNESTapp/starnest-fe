@@ -33,14 +33,14 @@ export function ChatView({
   }, [messages.length, isSending]);
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#0b0b0b]">
+    <div className="flex h-dvh flex-col overflow-hidden bg-[#0b0b0b]">
       <Navbar
         variant="static"
         rightSlot={
           <button
             type="button"
             onClick={onNewChat}
-            className="flex h-9 shrink-0 items-center gap-2 rounded-lg bg-white/10 px-3.5 font-body text-xs font-semibold text-white transition-colors hover:bg-white/20"
+            className="flex h-9 shrink-0 items-center gap-2 rounded-lg bg-white/10 px-3 font-body text-xs font-semibold text-white transition-colors hover:bg-white/20 sm:px-3.5"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
@@ -50,8 +50,8 @@ export function ChatView({
         }
       />
 
-      <div className="flex flex-1 justify-center overflow-y-auto">
-        <div className="flex w-full max-w-[760px] flex-col gap-6 px-4 py-8">
+      <div className="flex flex-1 justify-center overflow-y-auto overscroll-contain">
+        <div className="flex w-full max-w-[760px] flex-col gap-5 px-3 py-4 sm:gap-6 sm:px-4 sm:py-8">
           {messages.map((message) => (
             <ChatMessage
               key={message.id}

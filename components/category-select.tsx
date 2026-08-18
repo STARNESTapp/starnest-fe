@@ -63,7 +63,7 @@ export function CategorySelect({ value, onChange }: CategorySelectProps) {
         className="flex h-9 shrink-0 items-center justify-center gap-1.5 rounded-[10px] bg-white/10 px-2.5 py-2 transition-colors hover:bg-white/20"
       >
         <img src={selected.icon} alt="" aria-hidden="true" className="h-4 w-auto" />
-        <span className="font-body text-sm font-medium whitespace-nowrap text-white">
+        <span className="hidden font-body text-sm font-medium whitespace-nowrap text-white sm:inline">
           {selected.label}
         </span>
         <svg

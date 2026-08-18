@@ -1,11 +1,8 @@
 "use client";
 
 import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
+import { createContext, useContext, useState, type ReactNode } from "react";
 import { toast } from "sonner";
-import { ChatView } from "@/components/chat/chat-view";
-import { HeroSection } from "@/components/hero-section";
-import { Navbar } from "@/components/navbar";
 import { sendChatMessage } from "@/lib/chat-api";
 import type { Category, ChatApiRequest, ChatApiResponse, ChatMessage } from "@/types/chat";
 
@@ -13,8 +10,19 @@ function createId(): string {
   return crypto.randomUUID();
 }
 
-export function StarnestApp() {
-  const [view, setView] = useState<"hero" | "chat">("hero");
+interface ChatContextValue {
+  category: Category;
+  setCategory: (category: Category) => void;
+  messages: ChatMessage[];
+  isSending: boolean;
+  sendMessage: (text: string) => void;
+  selectOption: (messageId: string, option: string) => void;
+  newChat: () => void;
+}
+
+const ChatContext = createContext<ChatContextValue | null>(null);
+
+export function ChatProvider({ children }: { children: ReactNode }) {
   const [category, setCategory] = useState<Category>("movies");
   const [sessionId, setSessionId] = useState(() => createId());
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -38,49 +46,50 @@ export function StarnestApp() {
     },
   });
 
-  function handleSend(text: string) {
+  function sendMessage(text: string) {
     const trimmed = text.trim();
     if (!trimmed || mutation.isPending) return;
 
     setMessages((prev) => [...prev, { id: createId(), role: "user", text: trimmed }]);
-    setView("chat");
     mutation.mutate({ session_id: sessionId, message: trimmed, user_id: null, category });
   }
 
-  function handleOptionSelect(messageId: string, option: string) {
+  function selectOption(messageId: string, option: string) {
     setMessages((prev) =>
       prev.map((message) =>
         message.id === messageId ? { ...message, answeredOption: option } : message
       )
     );
-    handleSend(option);
+    sendMessage(option);
   }
 
-  function handleNewChat() {
+  function newChat() {
     setMessages([]);
     setSessionId(createId());
     setCategory("movies");
-    setView("hero");
-  }
-
-  if (view === "chat") {
-    return (
-      <ChatView
-        category={category}
-        onCategoryChange={setCategory}
-        messages={messages}
-        isSending={mutation.isPending}
-        onSend={handleSend}
-        onOptionSelect={handleOptionSelect}
-        onNewChat={handleNewChat}
-      />
-    );
   }
 
   return (
-    <main className="flex min-h-screen flex-col bg-[#0b0b0b]">
-      <Navbar />
-      <HeroSection category={category} onCategoryChange={setCategory} onSearch={handleSend} />
-    </main>
+    <ChatContext.Provider
+      value={{
+        category,
+        setCategory,
+        messages,
+        isSending: mutation.isPending,
+        sendMessage,
+        selectOption,
+        newChat,
+      }}
+    >
+      {children}
+    </ChatContext.Provider>
   );
+}
+
+export function useChat(): ChatContextValue {
+  const context = useContext(ChatContext);
+  if (!context) {
+    throw new Error("useChat must be used within a ChatProvider");
+  }
+  return context;
 }
