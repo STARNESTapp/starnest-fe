@@ -1,4 +1,5 @@
 import "./globals.css";
+import { ChatProvider } from "@/components/chat-provider";
 import { LayoutWrapper } from "@/components/layout-wrapper";
 import { TanstackProvider } from "@/components/providers/tanstack-provider";
 import type { Metadata } from "next";
@@ -39,8 +40,10 @@ export default function RootLayout({
       <body className={`${inter.variable} ${dmSans.variable} antialiased bg-background`}>
         <NuqsAdapter>
           <TanstackProvider>
-            <Toaster />
-            <LayoutWrapper>{children}</LayoutWrapper>
+            <ChatProvider>
+              <Toaster />
+              <LayoutWrapper>{children}</LayoutWrapper>
+            </ChatProvider>
           </TanstackProvider>
         </NuqsAdapter>
       </body>

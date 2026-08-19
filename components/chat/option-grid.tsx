@@ -8,7 +8,7 @@ export function OptionGrid({ options, answeredOption, onSelect }: OptionGridProp
   const isAnswered = Boolean(answeredOption);
 
   return (
-    <div className="mt-3 max-w-[460px] rounded-2xl border border-[#f73145]/25 bg-[#f73145]/5 p-4">
+    <div className="mt-3 max-w-full rounded-2xl border border-[#f73145]/25 bg-[#f73145]/5 p-4 sm:max-w-[460px]">
       <div className="flex flex-col gap-2">
         {options.map((option) => {
           const isSelected = option === answeredOption;
